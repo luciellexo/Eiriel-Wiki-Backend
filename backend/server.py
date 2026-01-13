@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, Field
 from typing import List, Optional, Any, Dict
@@ -8,6 +9,16 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI()
+
+# CORS Configuration
+# Allow all origins to support framing/redirects from user domains
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Database Connection
 MONGO_URL = os.getenv("MONGO_URL")
