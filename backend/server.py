@@ -42,7 +42,7 @@ async def health_check():
     return {"status": "ok"}
 
 @app.get("/api/substances", response_model=List[SubstanceSearchItem])
-async def get_substances(search: Optional[str] = None, limit: int = 100):
+async def get_substances(search: Optional[str] = None, limit: int = 1000):
     query = {}
     if search:
         query["name"] = {"$regex": search, "$options": "i"}
