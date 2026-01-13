@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, TextInput, Alert, ScrollView } from 'react-native';
 import { useDoseStore } from '../../store/useDoseStore';
 import { getActiveLogs } from '../../utils/substanceUtils';
 import { formatDistanceToNow, format } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { useTheme, ThemeColors } from '../../constants/theme';
+import { ResponsiveContainer } from '../../components/ResponsiveContainer';
 
 export default function HomeScreen() {
   const { logs, removeLog, updateLog } = useDoseStore();
@@ -102,7 +104,7 @@ export default function HomeScreen() {
   );
 
   return (
-    <View style={styles.container}>
+    <ResponsiveContainer style={styles.container}>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Active Substances</Text>
         {activeLogs.length === 0 ? (
@@ -183,12 +185,12 @@ export default function HomeScreen() {
             </View>
         </View>
       </Modal>
-    </View>
+    </ResponsiveContainer>
   );
 }
 
 const createStyles = (theme: ThemeColors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: theme.background, padding: 16 },
+  container: { flex: 1, padding: 16 },
   section: { marginBottom: 24 },
   sectionTitle: { fontSize: 22, fontWeight: 'bold', color: theme.textPrimary, marginBottom: 12 },
   emptyText: { color: theme.textSecondary, fontStyle: 'italic' },

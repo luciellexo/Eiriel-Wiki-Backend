@@ -6,6 +6,7 @@ import { Substance } from '../../types';
 import { Ionicons } from '@expo/vector-icons';
 import { useDoseStore } from '../../store/useDoseStore';
 import { useTheme, ThemeColors } from '../../constants/theme';
+import { ResponsiveContainer } from '../../components/ResponsiveContainer';
 
 export default function WikiScreen() {
   const [query, setQuery] = useState('');
@@ -72,7 +73,7 @@ export default function WikiScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ResponsiveContainer style={styles.container}>
       <View style={styles.searchContainer}>
         <Ionicons name="search" size={20} color={theme.textSecondary} style={styles.searchIcon} />
         <TextInput
@@ -95,14 +96,13 @@ export default function WikiScreen() {
           initialNumToRender={20}
         />
       )}
-    </View>
+    </ResponsiveContainer>
   );
 }
 
 const createStyles = (theme: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.background,
   },
   searchContainer: {
     flexDirection: 'row',

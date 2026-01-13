@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { getActiveLogs, getDurationTotalMinutes } from '../../utils/substanceUtils';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTheme, ThemeColors } from '../../constants/theme';
+import { ResponsiveContainer } from '../../components/ResponsiveContainer';
 
 export default function LogDoseScreen() {
   const router = useRouter();
@@ -140,142 +141,145 @@ export default function LogDoseScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.label}>Substance</Text>
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Search (e.g., Caffeine)"
-          placeholderTextColor={theme.placeholder}
-          value={query}
-          onChangeText={(t) => {
-            setQuery(t);
-            setIsSearching(true);
-            if (selectedSubstance && t !== selectedSubstance.name) {
-               setSelectedSubstance(null);
-               setSelectedRoa(null);
-            }
-          }}
-        />
-      </View>
-
-      {isSearching && searchResults.length > 0 && (
-        <View style={styles.resultsContainer}>
-          {searchResults.map((item) => (
-            <TouchableOpacity 
-              key={item.name} 
-              style={styles.resultItem}
-              onPress={() => handleSelectSubstance(item)}
-            >
-              <Text style={styles.resultText}>{item.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-
-      {interactionWarning && (
-        <View style={styles.warningContainer}>
-          <Ionicons name="warning" size={24} color={theme.error} />
-          <Text style={styles.warningText}>
-            Warning: Interaction with active {interactionWarning.name} ({interactionWarning.status})
-          </Text>
-        </View>
-      )}
-
-      {selectedSubstance && selectedRoa && (
-        <>
-          <Text style={styles.label}>Time of Dose</Text>
-          <View style={styles.timeContainer}>
-            <TouchableOpacity style={styles.timeButton} onPress={() => setShowDatePicker(true)}>
-              <Ionicons name="calendar-outline" size={20} color={theme.textSecondary} />
-              <Text style={styles.timeButtonText}>
-                 {timestamp.toLocaleDateString()}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.timeButton} onPress={() => setShowTimePicker(true)}>
-              <Ionicons name="time-outline" size={20} color={theme.textSecondary} />
-              <Text style={styles.timeButtonText}>
-                 {timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          {showDatePicker && (
-            <DateTimePicker
-              value={timestamp}
-              mode="date"
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-              onChange={onDateChange}
-              maximumDate={new Date()}
-            />
-          )}
-
-          {showTimePicker && (
-            <DateTimePicker
-              value={timestamp}
-              mode="time"
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-              onChange={onTimeChange}
-            />
-          )}
-
-          <Text style={styles.label}>Route of Administration</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.roaScroll}>
-            {selectedSubstance.roas.map((roa) => (
-              <TouchableOpacity
-                key={roa.name}
-                style={[styles.roaChip, selectedRoa.name === roa.name && styles.roaChipSelected]}
-                onPress={() => setSelectedRoa(roa)}
-              >
-                <Text style={[styles.roaText, selectedRoa.name === roa.name && styles.roaTextSelected]}>
-                  {roa.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-
-          <Text style={styles.label}>Amount ({selectedRoa.dose?.units || 'mg'})</Text>
+    <ResponsiveContainer style={styles.container} contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Text style={styles.label}>Substance</Text>
+        <View style={styles.searchContainer}>
           <TextInput
             style={styles.input}
-            placeholder="0"
+            placeholder="Search (e.g., Caffeine)"
             placeholderTextColor={theme.placeholder}
-            keyboardType="numeric"
-            value={amount}
-            onChangeText={setAmount}
+            value={query}
+            onChangeText={(t) => {
+              setQuery(t);
+              setIsSearching(true);
+              if (selectedSubstance && t !== selectedSubstance.name) {
+                 setSelectedSubstance(null);
+                 setSelectedRoa(null);
+              }
+            }}
           />
-          
-          {selectedRoa.dose && (
-            <View style={styles.dosageInfo}>
-               <Text style={styles.dosageText}>
-                 Light: {selectedRoa.dose.light?.min}-{selectedRoa.dose.light?.max} | 
-                 Common: {selectedRoa.dose.common?.min}-{selectedRoa.dose.common?.max} | 
-                 Strong: {selectedRoa.dose.strong?.min}-{selectedRoa.dose.strong?.max}
-               </Text>
+        </View>
+
+        {isSearching && searchResults.length > 0 && (
+          <View style={styles.resultsContainer}>
+            {searchResults.map((item) => (
+              <TouchableOpacity 
+                key={item.name} 
+                style={styles.resultItem}
+                onPress={() => handleSelectSubstance(item)}
+              >
+                <Text style={styles.resultText}>{item.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
+        {interactionWarning && (
+          <View style={styles.warningContainer}>
+            <Ionicons name="warning" size={24} color={theme.error} />
+            <Text style={styles.warningText}>
+              Warning: Interaction with active {interactionWarning.name} ({interactionWarning.status})
+            </Text>
+          </View>
+        )}
+
+        {selectedSubstance && selectedRoa && (
+          <>
+            <Text style={styles.label}>Time of Dose</Text>
+            <View style={styles.timeContainer}>
+              <TouchableOpacity style={styles.timeButton} onPress={() => setShowDatePicker(true)}>
+                <Ionicons name="calendar-outline" size={20} color={theme.textSecondary} />
+                <Text style={styles.timeButtonText}>
+                   {timestamp.toLocaleDateString()}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.timeButton} onPress={() => setShowTimePicker(true)}>
+                <Ionicons name="time-outline" size={20} color={theme.textSecondary} />
+                <Text style={styles.timeButtonText}>
+                   {timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </Text>
+              </TouchableOpacity>
             </View>
-          )}
 
-          <Text style={styles.label}>Notes</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            placeholder="Optional notes..."
-            placeholderTextColor={theme.placeholder}
-            multiline
-            value={notes}
-            onChangeText={setNotes}
-          />
+            {showDatePicker && (
+              <DateTimePicker
+                value={timestamp}
+                mode="date"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={onDateChange}
+                maximumDate={new Date()}
+              />
+            )}
 
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.saveButtonText}>Log Dose</Text>
-          </TouchableOpacity>
-        </>
-      )}
-    </ScrollView>
+            {showTimePicker && (
+              <DateTimePicker
+                value={timestamp}
+                mode="time"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={onTimeChange}
+              />
+            )}
+
+            <Text style={styles.label}>Route of Administration</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.roaScroll}>
+              {selectedSubstance.roas.map((roa) => (
+                <TouchableOpacity
+                  key={roa.name}
+                  style={[styles.roaChip, selectedRoa.name === roa.name && styles.roaChipSelected]}
+                  onPress={() => setSelectedRoa(roa)}
+                >
+                  <Text style={[styles.roaText, selectedRoa.name === roa.name && styles.roaTextSelected]}>
+                    {roa.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
+            <Text style={styles.label}>Amount ({selectedRoa.dose?.units || 'mg'})</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="0"
+              placeholderTextColor={theme.placeholder}
+              keyboardType="numeric"
+              value={amount}
+              onChangeText={setAmount}
+            />
+            
+            {selectedRoa.dose && (
+              <View style={styles.dosageInfo}>
+                 <Text style={styles.dosageText}>
+                   Light: {selectedRoa.dose.light?.min}-{selectedRoa.dose.light?.max} | 
+                   Common: {selectedRoa.dose.common?.min}-{selectedRoa.dose.common?.max} | 
+                   Strong: {selectedRoa.dose.strong?.min}-{selectedRoa.dose.strong?.max}
+                 </Text>
+              </View>
+            )}
+
+            <Text style={styles.label}>Notes</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              placeholder="Optional notes..."
+              placeholderTextColor={theme.placeholder}
+              multiline
+              value={notes}
+              onChangeText={setNotes}
+            />
+
+            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+              <Text style={styles.saveButtonText}>Log Dose</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </ScrollView>
+    </ResponsiveContainer>
   );
 }
 
 const createStyles = (theme: ThemeColors) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: theme.background },
-  content: { padding: 20, paddingBottom: 40 },
+  container: { flex: 1 },
+  content: { flex: 1 },
+  scrollContent: { padding: 20, paddingBottom: 40 },
   label: { color: theme.accent, fontSize: 16, marginBottom: 8, marginTop: 16, fontWeight: 'bold' },
   input: {
     backgroundColor: theme.inputBg,
