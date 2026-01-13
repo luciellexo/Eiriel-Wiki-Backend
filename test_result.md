@@ -101,3 +101,64 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Test the backend API endpoints for substance tracker application"
+
+backend:
+  - task: "Health Check API Endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "GET /api/health endpoint tested successfully. Returns {'status': 'ok'} with 200 status code."
+
+  - task: "Substances List API Endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "GET /api/substances endpoint tested successfully. Returns list of 100 substances with proper JSON structure including name, summary, featured, and url fields."
+
+  - task: "Substance Detail API Endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "GET /api/substances/{name} endpoint tested successfully with LSD substance. Returns detailed substance information including name, summary, and other properties. Case-insensitive search working correctly."
+
+frontend:
+  # No frontend testing performed as per instructions
+
+metadata:
+  created_by: "testing_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Health Check API Endpoint"
+    - "Substances List API Endpoint" 
+    - "Substance Detail API Endpoint"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "testing"
+    message: "Backend API testing completed successfully. All 3 requested endpoints (health, substances list, substance detail) are working correctly. Health endpoint returns proper status, substances endpoint returns 100 items with correct structure, and substance detail endpoint successfully retrieves LSD information with case-insensitive matching. Database connection and API responses are functioning as expected."
