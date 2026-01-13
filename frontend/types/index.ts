@@ -54,5 +54,9 @@ export interface DoseLog {
   unit: string;
   roa: string;
   timestamp: number; // Unix timestamp
+  estimatedDurationMinutes?: number;
+  substanceSnapshot?: {
+    interactions_flat: Interaction[] | null;
+  };
   notes: string;
 }
