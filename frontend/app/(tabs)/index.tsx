@@ -5,6 +5,7 @@ import { getActiveLogs } from '../../utils/substanceUtils';
 import { formatDistanceToNow, format } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { theme } from '../../constants/theme';
 
 export default function HomeScreen() {
   const { logs, removeLog, updateLog } = useDoseStore();
@@ -67,7 +68,7 @@ export default function HomeScreen() {
                   { text: 'Delete', style: 'destructive', onPress: () => removeLog(item.id) }
               ]);
           }}>
-             <Ionicons name="trash-outline" size={20} color="#666" />
+             <Ionicons name="trash-outline" size={20} color={theme.textSecondary} />
           </TouchableOpacity>
         </View>
         <Text style={styles.doseDetail}>{item.amount} {item.unit} via {item.roa}</Text>
@@ -95,7 +96,7 @@ export default function HomeScreen() {
        </View>
        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={styles.timeAgo}>{formatDistanceToNow(item.timestamp, { addSuffix: true })}</Text>
-          <Ionicons name="chevron-forward" size={16} color="#444" style={{marginLeft: 8}} />
+          <Ionicons name="chevron-forward" size={16} color={theme.textSecondary} style={{marginLeft: 8}} />
        </View>
     </TouchableOpacity>
   );
@@ -185,51 +186,61 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#121212', padding: 16 },
+  container: { flex: 1, backgroundColor: theme.background, padding: 16 },
   section: { marginBottom: 24 },
-  sectionTitle: { fontSize: 22, fontWeight: 'bold', color: '#BB86FC', marginBottom: 12 },
-  emptyText: { color: '#666', fontStyle: 'italic' },
+  sectionTitle: { fontSize: 22, fontWeight: 'bold', color: theme.textPrimary, marginBottom: 12 },
+  emptyText: { color: theme.textSecondary, fontStyle: 'italic' },
   activeCard: {
-    backgroundColor: '#1E1E1E',
+    backgroundColor: theme.card,
     borderRadius: 12,
     padding: 16,
     marginRight: 12,
     width: 250,
     borderLeftWidth: 4,
-    borderLeftColor: '#03DAC6'
+    borderLeftColor: theme.success,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  substanceName: { fontSize: 18, color: '#fff', fontWeight: 'bold' },
-  doseDetail: { color: '#ccc', fontSize: 14, marginBottom: 12 },
+  substanceName: { fontSize: 18, color: theme.textPrimary, fontWeight: 'bold' },
+  doseDetail: { color: theme.textSecondary, fontSize: 14, marginBottom: 12 },
   timerContainer: { marginTop: 8 },
-  timerText: { color: '#03DAC6', fontSize: 12, marginBottom: 4 },
-  progressBarBg: { height: 4, backgroundColor: '#333', borderRadius: 2 },
-  progressBarFill: { height: 4, backgroundColor: '#03DAC6', borderRadius: 2 },
+  timerText: { color: theme.accent, fontSize: 12, marginBottom: 4, fontWeight: 'bold' },
+  progressBarBg: { height: 4, backgroundColor: '#EEE', borderRadius: 2 },
+  progressBarFill: { height: 4, backgroundColor: theme.accent, borderRadius: 2 },
   historyItem: {
-    backgroundColor: '#1E1E1E',
+    backgroundColor: theme.card,
     padding: 16,
     borderRadius: 8,
     marginBottom: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
   },
-  historyName: { color: '#fff', fontSize: 16, fontWeight: '500' },
-  historyDetail: { color: '#888', fontSize: 12, marginTop: 4 },
-  historyNotes: { color: '#666', fontSize: 12, marginTop: 2, fontStyle: 'italic' },
-  timeAgo: { color: '#555', fontSize: 12 },
+  historyName: { color: theme.textPrimary, fontSize: 16, fontWeight: '500' },
+  historyDetail: { color: theme.textSecondary, fontSize: 12, marginTop: 4 },
+  historyNotes: { color: theme.textSecondary, fontSize: 12, marginTop: 2, fontStyle: 'italic' },
+  timeAgo: { color: theme.textSecondary, fontSize: 12 },
   
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', padding: 20 },
-  modalContent: { backgroundColor: '#1E1E1E', borderRadius: 12, padding: 20 },
-  modalTitle: { color: '#fff', fontSize: 20, fontWeight: 'bold', marginBottom: 16 },
-  label: { color: '#888', marginBottom: 8 },
-  input: { backgroundColor: '#2C2C2C', color: '#fff', padding: 12, borderRadius: 8, marginBottom: 16 },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 },
+  modalContent: { backgroundColor: theme.card, borderRadius: 12, padding: 20 },
+  modalTitle: { color: theme.textPrimary, fontSize: 20, fontWeight: 'bold', marginBottom: 16 },
+  label: { color: theme.textSecondary, marginBottom: 8 },
+  input: { backgroundColor: '#F0F0F0', color: theme.textPrimary, padding: 12, borderRadius: 8, marginBottom: 16 },
   textArea: { height: 80, textAlignVertical: 'top' },
   modalButtons: { flexDirection: 'row', justifyContent: 'flex-end', gap: 12 },
   modalButton: { paddingVertical: 10, paddingHorizontal: 20, borderRadius: 8 },
-  cancelButton: { backgroundColor: '#333' },
-  saveButton: { backgroundColor: '#03DAC6' },
-  buttonText: { color: '#fff', fontWeight: 'bold' },
+  cancelButton: { backgroundColor: '#EEE' },
+  saveButton: { backgroundColor: theme.accent },
+  buttonText: { color: '#FFF', fontWeight: 'bold' },
   deleteButton: { marginTop: 20, alignItems: 'center' },
-  deleteText: { color: '#CF6679' }
+  deleteText: { color: theme.error }
 });

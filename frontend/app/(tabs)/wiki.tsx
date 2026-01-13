@@ -5,6 +5,7 @@ import { api } from '../../services/api';
 import { Substance } from '../../types';
 import { Ionicons } from '@expo/vector-icons';
 import { useDoseStore } from '../../store/useDoseStore';
+import { theme } from '../../constants/theme';
 
 export default function WikiScreen() {
   const [query, setQuery] = useState('');
@@ -52,7 +53,7 @@ export default function WikiScreen() {
         <View style={{flex: 1}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
              <Text style={styles.itemName}>{item.name}</Text>
-             {fav && <Ionicons name="star" size={14} color="#CF6679" style={{marginLeft: 6}} />}
+             {fav && <Ionicons name="star" size={14} color={theme.accent} style={{marginLeft: 6}} />}
           </View>
           {item.summary && (
             <Text numberOfLines={2} style={styles.itemSummary}>{item.summary}</Text>
@@ -62,7 +63,7 @@ export default function WikiScreen() {
             e.stopPropagation();
             toggleFavorite(item.name);
         }}>
-           <Ionicons name={fav ? "star" : "star-outline"} size={22} color={fav ? "#CF6679" : "#666"} />
+           <Ionicons name={fav ? "star" : "star-outline"} size={22} color={fav ? theme.accent : "#AAA"} />
         </TouchableOpacity>
       </TouchableOpacity>
     );
@@ -75,14 +76,14 @@ export default function WikiScreen() {
         <TextInput
           style={styles.searchInput}
           placeholder="Search substances..."
-          placeholderTextColor="#666"
+          placeholderTextColor={theme.textSecondary}
           value={query}
           onChangeText={setQuery}
         />
       </View>
 
       {loading ? (
-        <ActivityIndicator size="large" color="#BB86FC" style={{ marginTop: 20 }} />
+        <ActivityIndicator size="large" color={theme.accent} style={{ marginTop: 20 }} />
       ) : (
         <FlatList
           data={substances}
@@ -99,23 +100,25 @@ export default function WikiScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
+    backgroundColor: theme.background,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1E1E1E',
+    backgroundColor: theme.card,
     margin: 16,
     paddingHorizontal: 12,
     borderRadius: 8,
     height: 48,
+    borderWidth: 1,
+    borderColor: theme.border,
   },
   searchIcon: {
     marginRight: 8,
   },
   searchInput: {
     flex: 1,
-    color: '#fff',
+    color: theme.textPrimary,
     fontSize: 16,
   },
   listContent: {
@@ -123,22 +126,27 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   item: {
-    backgroundColor: '#1E1E1E',
+    backgroundColor: theme.card,
     marginBottom: 12,
     padding: 16,
     borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
   },
   itemName: {
-    color: '#BB86FC',
+    color: theme.textPrimary,
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 4,
   },
   itemSummary: {
-    color: '#ccc',
+    color: theme.textSecondary,
     fontSize: 14,
     maxWidth: '90%',
   },

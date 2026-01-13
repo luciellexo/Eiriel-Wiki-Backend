@@ -3,6 +3,7 @@ import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from 'react-nat
 import { useLocalSearchParams } from 'expo-router';
 import { api } from '../../services/api';
 import { Substance } from '../../types';
+import { theme } from '../../constants/theme';
 
 export default function SubstanceDetailScreen() {
   const { name } = useLocalSearchParams<{ name: string }>();
@@ -26,7 +27,7 @@ export default function SubstanceDetailScreen() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#BB86FC" />
+        <ActivityIndicator size="large" color={theme.accent} />
       </View>
     );
   }
@@ -105,7 +106,7 @@ export default function SubstanceDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
+    backgroundColor: theme.background,
   },
   content: {
     padding: 16,
@@ -115,54 +116,60 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#121212',
+    backgroundColor: theme.background,
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#BB86FC',
+    color: theme.accent,
     marginBottom: 16,
   },
   summary: {
-    color: '#E0E0E0',
+    color: theme.textPrimary,
     fontSize: 16,
     lineHeight: 24,
   },
   section: {
     marginTop: 24,
-    backgroundColor: '#1E1E1E',
+    backgroundColor: theme.card,
     padding: 16,
     borderRadius: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    color: theme.textPrimary,
     marginBottom: 12,
   },
   roaContainer: {
     marginBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#333',
+    borderBottomColor: theme.border,
     paddingBottom: 16,
   },
   roaName: {
     fontSize: 18,
-    color: '#03DAC6',
+    color: theme.accent,
     marginBottom: 8,
     textTransform: 'capitalize',
+    fontWeight: '600'
   },
   table: {
     marginBottom: 8,
   },
   tableHeader: {
-    color: '#888',
+    color: theme.textSecondary,
     fontSize: 14,
     marginBottom: 4,
     fontWeight: 'bold',
   },
   row: {
-    color: '#ccc',
+    color: theme.textPrimary,
     fontSize: 15,
     marginBottom: 2,
   },
@@ -171,21 +178,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#333',
+    borderBottomColor: theme.border,
   },
   interactionName: {
     fontSize: 16,
     fontWeight: '500',
   },
   interactionStatus: {
-    color: '#888',
+    color: theme.textSecondary,
     fontSize: 14,
   },
-  dangerous: { color: '#CF6679' },
-  unsafe: { color: '#FFB74D' },
-  caution: { color: '#FFD54F' },
+  dangerous: { color: theme.error },
+  unsafe: { color: theme.warning },
+  caution: { color: '#FBC02D' },
   errorText: {
-    color: '#CF6679',
+    color: theme.error,
     fontSize: 18,
   },
 });

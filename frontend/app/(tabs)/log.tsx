@@ -7,6 +7,7 @@ import { Substance, SubstanceRoa } from '../../types';
 import { Ionicons } from '@expo/vector-icons';
 import { getActiveLogs, getDurationTotalMinutes } from '../../utils/substanceUtils';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { theme } from '../../constants/theme';
 
 export default function LogDoseScreen() {
   const router = useRouter();
@@ -143,7 +144,7 @@ export default function LogDoseScreen() {
         <TextInput
           style={styles.input}
           placeholder="Search (e.g., Caffeine)"
-          placeholderTextColor="#666"
+          placeholderTextColor={theme.textSecondary}
           value={query}
           onChangeText={(t) => {
             setQuery(t);
@@ -172,7 +173,7 @@ export default function LogDoseScreen() {
 
       {interactionWarning && (
         <View style={styles.warningContainer}>
-          <Ionicons name="warning" size={24} color="#CF6679" />
+          <Ionicons name="warning" size={24} color={theme.error} />
           <Text style={styles.warningText}>
             Warning: Interaction with active {interactionWarning.name} ({interactionWarning.status})
           </Text>
@@ -184,13 +185,13 @@ export default function LogDoseScreen() {
           <Text style={styles.label}>Time of Dose</Text>
           <View style={styles.timeContainer}>
             <TouchableOpacity style={styles.timeButton} onPress={() => setShowDatePicker(true)}>
-              <Ionicons name="calendar-outline" size={20} color="#fff" />
+              <Ionicons name="calendar-outline" size={20} color={theme.textSecondary} />
               <Text style={styles.timeButtonText}>
                  {timestamp.toLocaleDateString()}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.timeButton} onPress={() => setShowTimePicker(true)}>
-              <Ionicons name="time-outline" size={20} color="#fff" />
+              <Ionicons name="time-outline" size={20} color={theme.textSecondary} />
               <Text style={styles.timeButtonText}>
                  {timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </Text>
@@ -235,7 +236,7 @@ export default function LogDoseScreen() {
           <TextInput
             style={styles.input}
             placeholder="0"
-            placeholderTextColor="#666"
+            placeholderTextColor={theme.textSecondary}
             keyboardType="numeric"
             value={amount}
             onChangeText={setAmount}
@@ -255,7 +256,7 @@ export default function LogDoseScreen() {
           <TextInput
             style={[styles.input, styles.textArea]}
             placeholder="Optional notes..."
-            placeholderTextColor="#666"
+            placeholderTextColor={theme.textSecondary}
             multiline
             value={notes}
             onChangeText={setNotes}
@@ -271,70 +272,72 @@ export default function LogDoseScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#121212' },
+  container: { flex: 1, backgroundColor: theme.background },
   content: { padding: 20, paddingBottom: 40 },
-  label: { color: '#BB86FC', fontSize: 16, marginBottom: 8, marginTop: 16 },
+  label: { color: theme.accent, fontSize: 16, marginBottom: 8, marginTop: 16, fontWeight: 'bold' },
   input: {
-    backgroundColor: '#1E1E1E',
-    color: '#fff',
+    backgroundColor: theme.inputBg,
+    color: theme.textPrimary,
     padding: 12,
     borderRadius: 8,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#333'
+    borderColor: theme.border
   },
   searchContainer: { zIndex: 10 },
   resultsContainer: {
-    backgroundColor: '#2C2C2C',
+    backgroundColor: theme.card,
     borderRadius: 8,
     marginTop: 4,
     maxHeight: 200,
+    borderWidth: 1,
+    borderColor: theme.border
   },
   resultItem: {
     padding: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#333'
+    borderBottomColor: theme.border
   },
-  resultText: { color: '#fff' },
+  resultText: { color: theme.textPrimary },
   roaScroll: { flexDirection: 'row', marginBottom: 8 },
   roaChip: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: '#1E1E1E',
+    backgroundColor: theme.card,
     borderRadius: 20,
     marginRight: 8,
     borderWidth: 1,
-    borderColor: '#333'
+    borderColor: theme.border
   },
   roaChipSelected: {
-    backgroundColor: '#BB86FC',
-    borderColor: '#BB86FC'
+    backgroundColor: theme.accent,
+    borderColor: theme.accent
   },
-  roaText: { color: '#ccc' },
-  roaTextSelected: { color: '#000', fontWeight: 'bold' },
+  roaText: { color: theme.textSecondary },
+  roaTextSelected: { color: '#FFF', fontWeight: 'bold' },
   textArea: { height: 100, textAlignVertical: 'top' },
   saveButton: {
-    backgroundColor: '#03DAC6',
+    backgroundColor: theme.accent,
     padding: 16, 
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 32
   },
-  saveButtonText: { color: '#000', fontWeight: 'bold', fontSize: 16 },
+  saveButtonText: { color: '#FFF', fontWeight: 'bold', fontSize: 16 },
   dosageInfo: { marginTop: 8 },
-  dosageText: { color: '#888', fontSize: 12 },
+  dosageText: { color: theme.textSecondary, fontSize: 12 },
   warningContainer: {
-    backgroundColor: 'rgba(207, 102, 121, 0.2)',
+    backgroundColor: 'rgba(207, 102, 121, 0.1)',
     padding: 12,
     borderRadius: 8,
     marginTop: 16,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#CF6679'
+    borderColor: theme.error
   },
   warningText: {
-    color: '#CF6679',
+    color: theme.error,
     marginLeft: 8,
     flex: 1
   },
@@ -345,16 +348,16 @@ const styles = StyleSheet.create({
   timeButton: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#1E1E1E',
+    backgroundColor: theme.inputBg,
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#333'
+    borderColor: theme.border
   },
   timeButtonText: {
-    color: '#fff',
+    color: theme.textPrimary,
     marginLeft: 8,
     fontSize: 16
   }

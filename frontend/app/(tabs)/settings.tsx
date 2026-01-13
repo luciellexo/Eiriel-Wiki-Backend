@@ -4,6 +4,7 @@ import { useDoseStore } from '../../store/useDoseStore';
 import * as Clipboard from 'expo-clipboard';
 import * as WebBrowser from 'expo-web-browser';
 import { Ionicons } from '@expo/vector-icons';
+import { theme } from '../../constants/theme';
 
 export default function SettingsScreen() {
   const { logs, clearLogs, favorites } = useDoseStore();
@@ -63,12 +64,12 @@ export default function SettingsScreen() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Data Management</Text>
         <TouchableOpacity style={styles.button} onPress={handleExport}>
-          <Ionicons name="copy-outline" size={20} color="#000" style={styles.icon} />
+          <Ionicons name="copy-outline" size={20} color="#FFF" style={styles.icon} />
           <Text style={styles.buttonText}>Export Logs (JSON to Clipboard)</Text>
         </TouchableOpacity>
         
         <TouchableOpacity style={[styles.button, styles.dangerButton]} onPress={handleClear}>
-          <Ionicons name="trash-outline" size={20} color="#fff" style={styles.icon} />
+          <Ionicons name="trash-outline" size={20} color="#FFF" style={styles.icon} />
           <Text style={styles.dangerButtonText}>Clear All Data</Text>
         </TouchableOpacity>
       </View>
@@ -77,15 +78,15 @@ export default function SettingsScreen() {
         <Text style={styles.sectionTitle}>Harm Reduction Resources</Text>
         <TouchableOpacity style={styles.linkButton} onPress={() => openLink('https://psychonautwiki.org/')}>
            <Text style={styles.linkText}>PsychonautWiki</Text>
-           <Ionicons name="open-outline" size={16} color="#BB86FC" />
+           <Ionicons name="open-outline" size={16} color={theme.accent} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.linkButton} onPress={() => openLink('https://tripsit.me/')}>
            <Text style={styles.linkText}>TripSit</Text>
-           <Ionicons name="open-outline" size={16} color="#BB86FC" />
+           <Ionicons name="open-outline" size={16} color={theme.accent} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.linkButton} onPress={() => openLink('https://dancesafe.org/')}>
            <Text style={styles.linkText}>DanceSafe</Text>
-           <Ionicons name="open-outline" size={16} color="#BB86FC" />
+           <Ionicons name="open-outline" size={16} color={theme.accent} />
         </TouchableOpacity>
       </View>
 
@@ -100,16 +101,16 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#121212' },
+  container: { flex: 1, backgroundColor: theme.background },
   content: { padding: 20, paddingBottom: 40 },
-  header: { fontSize: 32, fontWeight: 'bold', color: '#BB86FC', marginBottom: 24, marginTop: 40 },
-  section: { marginBottom: 24, backgroundColor: '#1E1E1E', borderRadius: 12, padding: 16 },
-  sectionTitle: { color: '#888', fontSize: 14, fontWeight: 'bold', marginBottom: 12, textTransform: 'uppercase' },
+  header: { fontSize: 32, fontWeight: 'bold', color: theme.textPrimary, marginBottom: 24, marginTop: 40 },
+  section: { marginBottom: 24, backgroundColor: theme.card, borderRadius: 12, padding: 16, shadowColor: "#000", shadowOffset: {width:0, height:1}, shadowOpacity:0.05, shadowRadius:2, elevation:2 },
+  sectionTitle: { color: theme.textSecondary, fontSize: 14, fontWeight: 'bold', marginBottom: 12, textTransform: 'uppercase' },
   statRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  statLabel: { color: '#ccc', fontSize: 16 },
-  statValue: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+  statLabel: { color: theme.textSecondary, fontSize: 16 },
+  statValue: { color: theme.textPrimary, fontSize: 16, fontWeight: 'bold' },
   button: { 
-    backgroundColor: '#03DAC6', 
+    backgroundColor: theme.accent, 
     padding: 16, 
     borderRadius: 8, 
     alignItems: 'center', 
@@ -117,20 +118,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center'
   },
-  buttonText: { color: '#000', fontWeight: 'bold', fontSize: 16 },
-  dangerButton: { backgroundColor: '#CF6679' },
-  dangerButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+  buttonText: { color: '#FFF', fontWeight: 'bold', fontSize: 16 },
+  dangerButton: { backgroundColor: theme.error },
+  dangerButtonText: { color: '#FFF', fontWeight: 'bold', fontSize: 16 },
   icon: { marginRight: 8 },
   linkButton: { 
     paddingVertical: 12, 
     borderBottomWidth: 1, 
-    borderBottomColor: '#333',
+    borderBottomColor: theme.border,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
   },
-  linkText: { color: '#BB86FC', fontSize: 16 },
+  linkText: { color: theme.accent, fontSize: 16 },
   footer: { marginTop: 20, alignItems: 'center' },
-  disclaimer: { color: '#666', fontSize: 12, textAlign: 'center', marginBottom: 8 },
-  version: { color: '#444', fontSize: 12 }
+  disclaimer: { color: theme.textSecondary, fontSize: 12, textAlign: 'center', marginBottom: 8 },
+  version: { color: theme.textSecondary, fontSize: 12 }
 });
