@@ -3,12 +3,14 @@ import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from 'react-nat
 import { useLocalSearchParams } from 'expo-router';
 import { api } from '../../services/api';
 import { Substance } from '../../types';
-import { theme } from '../../constants/theme';
+import { useTheme, ThemeColors } from '../../constants/theme';
 
 export default function SubstanceDetailScreen() {
   const { name } = useLocalSearchParams<{ name: string }>();
   const [substance, setSubstance] = useState<Substance | null>(null);
   const [loading, setLoading] = useState(true);
+  const theme = useTheme();
+  const styles = createStyles(theme);
 
   useEffect(() => {
     if (name) {
@@ -103,7 +105,7 @@ export default function SubstanceDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.background,

@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, TextInput, Alert, ScrollView } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
 import { useDoseStore } from '../../store/useDoseStore';
 import { getActiveLogs } from '../../utils/substanceUtils';
 import { formatDistanceToNow, format } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { theme } from '../../constants/theme';
+import { useTheme, ThemeColors } from '../../constants/theme';
 
 export default function HomeScreen() {
   const { logs, removeLog, updateLog } = useDoseStore();
   const [activeLogs, setActiveLogs] = useState<any[]>([]);
   const [historyLogs, setHistoryLogs] = useState<any[]>([]);
   const [now, setNow] = useState(Date.now());
-  const router = useRouter();
+  const theme = useTheme();
+  const styles = createStyles(theme);
 
   // Edit Modal State
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -145,6 +145,7 @@ export default function HomeScreen() {
                     value={editAmount} 
                     onChangeText={setEditAmount}
                     keyboardType="numeric"
+                    placeholderTextColor={theme.placeholder}
                 />
 
                 <Text style={styles.label}>Notes</Text>
@@ -153,6 +154,7 @@ export default function HomeScreen() {
                     value={editNotes} 
                     onChangeText={setEditNotes}
                     multiline
+                    placeholderTextColor={theme.placeholder}
                 />
 
                 <View style={styles.modalButtons}>
@@ -185,7 +187,7 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.background, padding: 16 },
   section: { marginBottom: 24 },
   sectionTitle: { fontSize: 22, fontWeight: 'bold', color: theme.textPrimary, marginBottom: 12 },
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
   doseDetail: { color: theme.textSecondary, fontSize: 14, marginBottom: 12 },
   timerContainer: { marginTop: 8 },
   timerText: { color: theme.accent, fontSize: 12, marginBottom: 4, fontWeight: 'bold' },
-  progressBarBg: { height: 4, backgroundColor: '#EEE', borderRadius: 2 },
+  progressBarBg: { height: 4, backgroundColor: theme.border, borderRadius: 2 },
   progressBarFill: { height: 4, backgroundColor: theme.accent, borderRadius: 2 },
   historyItem: {
     backgroundColor: theme.card,
@@ -234,11 +236,11 @@ const styles = StyleSheet.create({
   modalContent: { backgroundColor: theme.card, borderRadius: 12, padding: 20 },
   modalTitle: { color: theme.textPrimary, fontSize: 20, fontWeight: 'bold', marginBottom: 16 },
   label: { color: theme.textSecondary, marginBottom: 8 },
-  input: { backgroundColor: '#F0F0F0', color: theme.textPrimary, padding: 12, borderRadius: 8, marginBottom: 16 },
+  input: { backgroundColor: theme.inputBg, color: theme.textPrimary, padding: 12, borderRadius: 8, marginBottom: 16, borderWidth: 1, borderColor: theme.border },
   textArea: { height: 80, textAlignVertical: 'top' },
   modalButtons: { flexDirection: 'row', justifyContent: 'flex-end', gap: 12 },
   modalButton: { paddingVertical: 10, paddingHorizontal: 20, borderRadius: 8 },
-  cancelButton: { backgroundColor: '#EEE' },
+  cancelButton: { backgroundColor: theme.border },
   saveButton: { backgroundColor: theme.accent },
   buttonText: { color: '#FFF', fontWeight: 'bold' },
   deleteButton: { marginTop: 20, alignItems: 'center' },

@@ -7,11 +7,13 @@ import { Substance, SubstanceRoa } from '../../types';
 import { Ionicons } from '@expo/vector-icons';
 import { getActiveLogs, getDurationTotalMinutes } from '../../utils/substanceUtils';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { theme } from '../../constants/theme';
+import { useTheme, ThemeColors } from '../../constants/theme';
 
 export default function LogDoseScreen() {
   const router = useRouter();
   const { logs, addLog } = useDoseStore();
+  const theme = useTheme();
+  const styles = createStyles(theme);
   
   // Form State
   const [query, setQuery] = useState('');
@@ -144,7 +146,7 @@ export default function LogDoseScreen() {
         <TextInput
           style={styles.input}
           placeholder="Search (e.g., Caffeine)"
-          placeholderTextColor={theme.textSecondary}
+          placeholderTextColor={theme.placeholder}
           value={query}
           onChangeText={(t) => {
             setQuery(t);
@@ -236,7 +238,7 @@ export default function LogDoseScreen() {
           <TextInput
             style={styles.input}
             placeholder="0"
-            placeholderTextColor={theme.textSecondary}
+            placeholderTextColor={theme.placeholder}
             keyboardType="numeric"
             value={amount}
             onChangeText={setAmount}
@@ -256,7 +258,7 @@ export default function LogDoseScreen() {
           <TextInput
             style={[styles.input, styles.textArea]}
             placeholder="Optional notes..."
-            placeholderTextColor={theme.textSecondary}
+            placeholderTextColor={theme.placeholder}
             multiline
             value={notes}
             onChangeText={setNotes}
@@ -271,7 +273,7 @@ export default function LogDoseScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
   container: { flex: 1, backgroundColor: theme.background },
   content: { padding: 20, paddingBottom: 40 },
   label: { color: theme.accent, fontSize: 16, marginBottom: 8, marginTop: 16, fontWeight: 'bold' },

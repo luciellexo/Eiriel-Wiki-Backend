@@ -5,7 +5,7 @@ import { api } from '../../services/api';
 import { Substance } from '../../types';
 import { Ionicons } from '@expo/vector-icons';
 import { useDoseStore } from '../../store/useDoseStore';
-import { theme } from '../../constants/theme';
+import { useTheme, ThemeColors } from '../../constants/theme';
 
 export default function WikiScreen() {
   const [query, setQuery] = useState('');
@@ -13,6 +13,8 @@ export default function WikiScreen() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { toggleFavorite, isFavorite, favorites } = useDoseStore();
+  const theme = useTheme();
+  const styles = createStyles(theme);
 
   const loadSubstances = async (q: string = '') => {
     setLoading(true);
@@ -63,7 +65,7 @@ export default function WikiScreen() {
             e.stopPropagation();
             toggleFavorite(item.name);
         }}>
-           <Ionicons name={fav ? "star" : "star-outline"} size={22} color={fav ? theme.accent : "#AAA"} />
+           <Ionicons name={fav ? "star" : "star-outline"} size={22} color={fav ? theme.accent : theme.textSecondary} />
         </TouchableOpacity>
       </TouchableOpacity>
     );
@@ -72,11 +74,11 @@ export default function WikiScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color="#888" style={styles.searchIcon} />
+        <Ionicons name="search" size={20} color={theme.textSecondary} style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
           placeholder="Search substances..."
-          placeholderTextColor={theme.textSecondary}
+          placeholderTextColor={theme.placeholder}
           value={query}
           onChangeText={setQuery}
         />
@@ -97,7 +99,7 @@ export default function WikiScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (theme: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.background,
