@@ -1,75 +1,68 @@
-from fastapi import FastAPI, APIRouter
-from dotenv import load_dotenv
-from starlette.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, HTTPException, Query
 from motor.motor_asyncio import AsyncIOMotorClient
-import os
-import logging
-from pathlib import Path
 from pydantic import BaseModel, Field
-from typing import List
-import uuid
-from datetime import datetime
+from typing import List, Optional, Any, Dict
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
-ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
-
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
-
-# Create the main app without a prefix
 app = FastAPI()
 
-# Create a router with the /api prefix
-api_router = APIRouter(prefix="/api")
+# Database Connection
+MONGO_URL = os.getenv("MONGO_URL")
+if not MONGO_URL:
+    raise Exception("MONGO_URL not found in environment variables")
 
+client = AsyncIOMotorClient(MONGO_URL)
+db = client.get_database("app_db")
+collection = db.get_collection("substances")
 
-# Define Models
-class StatusCheck(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+# Models
+class SubstanceSearchItem(BaseModel):
+    name: str
+    summary: Optional[str] = None
+    featured: Optional[bool] = None
+    url: Optional[str] = None
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
+class SubstanceDetail(BaseModel):
+    id: str = Field(alias="_id")
+    name: str
+    url: Optional[str] = None
+    summary: Optional[str] = None
+    featured: Optional[bool] = None
+    roas: Optional[List[Dict[str, Any]]] = None
+    images: Optional[List[Dict[str, Any]]] = None
+    interactions_flat: Optional[List[Dict[str, str]]] = None
+    addictionPotential: Optional[str] = None
+    tolerance: Optional[Dict[str, Any]] = None
 
-# Add your routes to the router instead of directly to app
-@api_router.get("/")
-async def root():
-    return {"message": "Hello World"}
+@app.get("/api/health")
+async def health_check():
+    return {"status": "ok"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.dict()
-    status_obj = StatusCheck(**status_dict)
-    _ = await db.status_checks.insert_one(status_obj.dict())
-    return status_obj
+@app.get("/api/substances", response_model=List[SubstanceSearchItem])
+async def get_substances(search: Optional[str] = None, limit: int = 100):
+    query = {}
+    if search:
+        query["name"] = {"$regex": search, "$options": "i"}
+    
+    cursor = collection.find(query, {"name": 1, "summary": 1, "featured": 1, "url": 1}).sort("name", 1).limit(limit)
+    results = await cursor.to_list(length=limit)
+    return results
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    status_checks = await db.status_checks.find().to_list(1000)
-    return [StatusCheck(**status_check) for status_check in status_checks]
+@app.get("/api/substances/{name}")
+async def get_substance_detail(name: str):
+    substance = await collection.find_one({"name": name})
+    if not substance:
+        # Try case insensitive
+        substance = await collection.find_one({"name": {"$regex": f"^{name}$", "$options": "i"}})
+        if not substance:
+            raise HTTPException(status_code=404, detail="Substance not found")
+    
+    substance["_id"] = str(substance["_id"])
+    return substance
 
-# Include the router in the main app
-app.include_router(api_router)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8001)
