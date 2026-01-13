@@ -16,19 +16,15 @@ db = client.get_database("app_db")
 collection = db.get_collection("substances")
 
 def sync_tripsit():
-    print("Fetching data from TripSit...")
+    print("Fetching data from TripSit (GitHub)...")
     try:
-        response = requests.get('http://tripbot.tripsit.me/api/tripsit/getAll', timeout=60)
+        # Fetching raw drugs.json from TripSit GitHub
+        response = requests.get('https://raw.githubusercontent.com/TripSit/drugs/master/drugs.json', timeout=60)
         if response.status_code != 200:
             print(f"Failed to fetch TripSit data: {response.status_code}")
             return
 
-        data = response.json()
-        if not data or 'data' not in data:
-            print("Invalid TripSit data format")
-            return
-
-        substances = data['data'][0] # TripSit returns {"data": [{"LSD": {...}, ...}]}
+        substances = response.json()
         print(f"Found {len(substances)} substances in TripSit.")
 
         count_new = 0
@@ -52,13 +48,6 @@ def sync_tripsit():
                 if not existing.get('summary') and val.get('properties', {}).get('summary'):
                     updates['summary'] = val['properties']['summary']
                 
-                # If ROAs are missing entirely in our DB but exist in TripSit
-                if (not existing.get('roas') or len(existing.get('roas')) == 0) and val.get('formatted_dose'):
-                    # Convert TripSit formatted_dose to our structure (simplified)
-                    # This is complex because TripSit structure varies. 
-                    # We'll stick to basic summary/interaction info for now to avoid breaking the frontend
-                    pass
-
                 # Interactions (Combos)
                 # TripSit has 'combos': {'2c-t-x': {'status': 'Unsafe'}, ...}
                 if val.get('combos'):
@@ -71,7 +60,10 @@ def sync_tripsit():
                                 'Dangerous': 'Dangerous',
                                 'Unsafe': 'Unsafe',
                                 'Caution': 'Caution',
-                                'Low Risk': 'Safe', # Mapping Low Risk -> Safe for simplicity or keep distinct?
+                                'Low Risk & Synergyl': 'Safe',
+                                'Low Risk & Synergy': 'Safe',
+                                'Low Risk & No Synergy': 'Safe',
+                                'Low Risk & Decrease': 'Safe',
                                 'Safe': 'Safe'
                             }
                             status = status_map.get(combo_data.get('status'), 'Unknown')
