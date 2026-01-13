@@ -4,12 +4,14 @@ import { useRouter } from 'expo-router';
 import { api } from '../../services/api';
 import { Substance } from '../../types';
 import { Ionicons } from '@expo/vector-icons';
+import { useDoseStore } from '../../store/useDoseStore';
 
 export default function WikiScreen() {
   const [query, setQuery] = useState('');
   const [substances, setSubstances] = useState<Substance[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { toggleFavorite, isFavorite, favorites } = useDoseStore();
 
   const loadSubstances = async (q: string = '') => {
     setLoading(true);
@@ -19,7 +21,14 @@ export default function WikiScreen() {
         setSubstances(results);
       } else {
         const results = await api.getAllSubstances();
-        setSubstances(results);
+        // Sort: Favorites first, then alphabetical
+        const sorted = results.sort((a, b) => {
+           const favA = isFavorite(a.name) ? 1 : 0;
+           const favB = isFavorite(b.name) ? 1 : 0;
+           if (favA !== favB) return favB - favA;
+           return a.name.localeCompare(b.name);
+        });
+        setSubstances(sorted);
       }
     } finally {
       setLoading(false);
@@ -31,22 +40,33 @@ export default function WikiScreen() {
         loadSubstances(query);
     }, 500);
     return () => clearTimeout(timeout);
-  }, [query]);
+  }, [query, favorites]); // Reload when favorites change
 
-  const renderItem = ({ item }: { item: Substance }) => (
-    <TouchableOpacity 
-      style={styles.item} 
-      onPress={() => router.push(`/substance/${encodeURIComponent(item.name)}`)}
-    >
-      <View>
-        <Text style={styles.itemName}>{item.name}</Text>
-        {item.summary && (
-          <Text numberOfLines={2} style={styles.itemSummary}>{item.summary}</Text>
-        )}
-      </View>
-      <Ionicons name="chevron-forward" size={20} color="#666" />
-    </TouchableOpacity>
-  );
+  const renderItem = ({ item }: { item: Substance }) => {
+    const fav = isFavorite(item.name);
+    return (
+      <TouchableOpacity 
+        style={styles.item} 
+        onPress={() => router.push(`/substance/${encodeURIComponent(item.name)}`)}
+      >
+        <View style={{flex: 1}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+             <Text style={styles.itemName}>{item.name}</Text>
+             {fav && <Ionicons name="star" size={14} color="#CF6679" style={{marginLeft: 6}} />}
+          </View>
+          {item.summary && (
+            <Text numberOfLines={2} style={styles.itemSummary}>{item.summary}</Text>
+          )}
+        </View>
+        <TouchableOpacity onPress={(e) => {
+            e.stopPropagation();
+            toggleFavorite(item.name);
+        }}>
+           <Ionicons name={fav ? "star" : "star-outline"} size={22} color={fav ? "#CF6679" : "#666"} />
+        </TouchableOpacity>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
