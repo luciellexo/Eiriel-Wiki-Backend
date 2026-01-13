@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "frontend",
-    "slug": "frontend",
+    "name": "Dose Tracker",
+    "slug": "dose-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/custom-icon.png",
-    "scheme": "frontend",
+    "scheme": "dose-tracker",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -16,12 +16,19 @@
         "foregroundImage": "./assets/images/custom-icon.png",
         "backgroundColor": "#000"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.emergent.dosetracker"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/custom-icon.png"
+      "favicon": "./assets/images/custom-icon.png",
+      "name": "Dose Tracker",
+      "shortName": "DoseTracker",
+      "description": "Harm reduction and dose logging application",
+      "themeColor": "#7B1FA2",
+      "backgroundColor": "#F8F5FA",
+      "display": "standalone"
     },
     "plugins": [
       "expo-router",
