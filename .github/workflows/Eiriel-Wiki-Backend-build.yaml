@@ -33,7 +33,8 @@ jobs:
           node-version: v18
 
       - name: Build Node assets
-        env:
+        env: 
+          working-directory: ./backend
           CI: true
           SITE_URL: ${{ inputs.site-url }}
         run: npm install
