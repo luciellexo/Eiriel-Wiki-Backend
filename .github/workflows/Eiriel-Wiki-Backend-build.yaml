@@ -34,10 +34,10 @@ jobs:
 
       - name: Build Node assets
         env: 
-          working-directory: ./backend
+          working-directory: ./frontend
           CI: true
           SITE_URL: ${{ inputs.site-url }}
-        run: npm install
+        run: npm@5 install
 
 # Please do not touch the following action
       - name: Store deployment content
