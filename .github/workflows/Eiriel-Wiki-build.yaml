@@ -6,7 +6,7 @@ name: "Deploy Now: Execute Build"
 on:
   workflow_call:
     inputs:
-      site-url: "https://wiki.eiriel.org//
+      site-url: "https://wiki.eiriel.org/
         required: true
         type: string
       branch-id:
